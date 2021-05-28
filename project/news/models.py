@@ -1,0 +1,73 @@
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models import Sum
+
+
+class Author(models.Model):
+    authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
+    authorRating = models.IntegerField(default=0)
+
+    def update_rating(self):
+        postRat = self.post_set.all().aggregate(postRating=Sum('rating'))
+        pRat = 0
+        pRat += postRat.get('postRating')
+
+        commentRat = self.authorUser.comment_set.all().aggregate(commentRauthorUserating=Sum('rating'))
+        cRat = 0
+        cRat += commentRat.get('commentRating')
+
+        allcommentsRat = Comment.objects.filter(commentPost_id__author_id=self.id).aggregate(acRating=Sum('rating'))
+        acRat = 0
+        acRat += allcommentsRat.get('acRating')
+
+        self.authorRating = pRat * 3 + cRat + acRat
+        self.save()
+
+        return self.authorRating
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=128, unique=True)
+
+
+class Post(models.Model):
+    category = models.ManyToManyField(Category, through='PostCategory')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    post_type = models.CharField(max_length=2, choices=[(
+        'AR', 'Article'), ('NW', 'News')], default='NW')
+    date = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=128)
+    content = models.TextField(blank=True)
+    rating = models.IntegerField(default=0)
+
+    def preview(self):
+        return self.content[:100] + '...'
+
+    def like(self):
+        self.rating += 1
+        self.save()
+
+    def dislike(self):
+        self.rating -= 1
+        self.save()
+
+
+class PostCategory(models.Model):
+    postThrough = models.ForeignKey(Post, on_delete=models.CASCADE)
+    categoryThrough = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+
+class Comment(models.Model):
+    commentPost = models.ForeignKey(Post, on_delete=models.CASCADE)
+    commentUser = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    dateCreation = models.DateTimeField(auto_now_add=True)
+    rating = models.IntegerField(default=0)
+
+    def like(self):
+        self.rating += 1
+        self.save()
+
+    def dislike(self):
+        self.rating -= 1
+        self.save()

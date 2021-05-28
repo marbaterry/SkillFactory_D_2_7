@@ -1,0 +1,87 @@
+from news.models import *
+
+u1 = User.objects.create_user(username='Vasya')
+u2 = User.objects.create_user(username='Petya')
+
+User.objects.all()
+<QuerySet [<User: Vasya>, <User: Petya>]>
+
+a1 = Author.objects.create(authorUser=u1)
+a2 = Author.objects.create(authorUser=u2)
+
+Author.objects.all()
+<QuerySet [<Author: Author object (1)>, <Author: Author object (2)>]
+
+cat1 = Category.objects.create(name='IT')
+cat2 = Category.objects.create(name='Авто')
+cat3 = Category.objects.create(name='Культура')
+cat4 = Category.objects.create(name='Мемесы')
+
+Category.objects.all().values('id','name')
+<QuerySet [{'id': 1, 'name': 'IT'}, {'id': 2, 'name': 'Авто'}, {'id': 3, 'name': 'Культура'}, {'id': 4, 'name': 'Мемесы'}]>
+
+p1 = Post.objects.create(author=a1, post_type='NW', title='title_number_1', content='somebigtext_number_1')
+p2 = Post.objects.create(author=a2, post_type='NW', title='title_number_2', content='somebigtext_number_2')
+p3 = Post.objects.create(author=a1, post_type='NW', title='title_number_3', content='somebigtext_number_3')
+p4 = Post.objects.create(author=a1, post_type='AR', title='title_number_4', content='somebigtext_number_4')
+
+Post.objects.all().values('id','content')
+<QuerySet [{'id': 1, 'content': 'somebigtext_number_1'}, {'id': 2, 'content': 'somebigtext_number_2'}, {'id': 3, 'content': 'somebigtext_number_3'}, {'id': 4, 'content': 'somebigtext_number_4'}]>
+
+p1.category.add(cat1)
+p2.category.add(cat2)
+p3.category.add(cat3)
+p1.category.add(cat1,cat4)
+
+Post.objects.all().values('id','content','category')
+<QuerySet [{'id': 1, 'content': 'somebigtext_number_1', 'category': 1}, {'id': 2, 'content': 'somebigtext_number_2', 'category': 2}, {'id': 3, 'content': 'somebigtext_number_3', 'category': 3}, {'id': 4, 'content': 'somebigtext_number_4', 'category': 1}, {'id': 4, 'content': 'somebigtext_number_4', 'category': 4}]>
+
+com1 = Comment.objects.create(commentPost=p1 ,commentUser=u1, text='Yo! First comment.')
+com2 = Comment.objects.create(commentPost=p2 ,commentUser=u1, text='Hey. Easy as pie.')
+com3 = Comment.objects.create(commentPost=p3 ,commentUser=u1, text='Bananas!')
+com4 = Comment.objects.create(commentPost=p4 ,commentUser=u2, text='Salut!')
+
+Comment.objects.all().values('commentUser','text')
+<QuerySet [{'commentUser': 1, 'text': 'Yo! First comment.'}, {'commentUser': 1, 'text': 'Hey. Easy as pie.'}, {'commentUser': 1, 'text': 'Bananas!'}, {'commentUser': 2, 'text': 'Salut!'}]>
+
+com1.like()
+com2.like()
+com2.like()
+com2.like()
+com2.like()
+com4.dislike()
+
+Comment.objects.all().values('commentUser','text', 'rating')
+<QuerySet [{'commentUser': 1, 'text': 'Yo! First comment.', 'rating': 1}, {'commentUser': 1, 'text': 'Hey. Easy as pie.', 'rating': 4}, {'commentUser': 1, 'text': 'Bananas!', 'rating': 0}, {'commentUser': 2, 'text': 'Salut!', 'rating': -1}]>
+
+p1.dislike()
+p1.dislike()
+p4.like()
+
+ Post.objects.all().values('author','title', 'rating')
+<QuerySet [{'author': 1, 'title': 'title_number_1', 'rating': -2}, {'author': 2, 'title': 'title_number_2', 'rating': 0}, {'author': 1, 'title': 'title_number_3', 'rating': 0}, {'author': 1, 'title': 'title_number_4', 'rating': 1}]>
+
+a1 = Author.objects.get(id=1)
+a1.update_rating()
+a2 = Author.objects.get(id=2)
+a2.update_rating()
+
+a = Author.objects.order_by('-authorRating')[:1]
+for i in a:
+     i.authorRating
+     i.authorUser.username
+
+p = Post.objects.order_by('-rating')[:1]
+for i in p:
+     i.date
+     i.author.authorUser.username
+     i.rating
+     i.title
+     i.preview()
+
+com = Comment.objects.filter(commentPost=(p.values('id')))
+for i in com:
+     i.dateCreation
+     i.commentUser.username
+     i.rating
+     i.text
