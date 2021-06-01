@@ -1,10 +1,25 @@
-<!-- Название у нас будет proudcts -->
+{% load custom_filters %} <!-- не забываем заранее загружать наши фильтры! -->
+
 {% block title %}
-POST
+Breaking News
 {% endblock title %}
 
-<!-- В контенте на странице мы выводим все товары -->
 {% block content %}
-<h1>ALL POSTS</h1>
-{{ post }}
+    <h3>NEWS</h3>
+    <hr>
+    {% for new in post %}
+        <table>
+            <tr>
+                <td>
+                    {{ new.title }}
+                </td>
+                <td>
+                    {{ new.date }}
+                </td>
+                <td>
+                    <a href="/news/{{ new.pk }}">{{ new.content|truncatechars:20 }}</a>
+                </td>
+            </tr>
+        </table>
+    {% endfor %}
 {% endblock content %}

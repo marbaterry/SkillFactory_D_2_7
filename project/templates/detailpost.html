@@ -1,0 +1,10 @@
+<!-- Название у нас будет proudcts -->
+{% block title %}
+<h3>{{ post.title }}</h3>
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, ID которого было передано в адрес -->
+{% block content %}
+<p>{{ post.content }}</p>
+<p>Writed by {{ post.author.authorUser.username }}. Published {{ post.date|date:'d.m.Y h:m' }}</p>
+{% endblock content %}
