@@ -1,3 +1,4 @@
+{% extends 'flatpages/default.html' %}
 {% load custom_filters %} <!-- не забываем заранее загружать наши фильтры! -->
 
 {% block title %}
@@ -11,13 +12,13 @@ Breaking News
         <table>
             <tr>
                 <td>
-                    {{ new.title }}
+                    {{ new.title|censor }}
                 </td>
                 <td>
                     {{ new.date }}
                 </td>
                 <td>
-                    <a href="/news/{{ new.pk }}">{{ new.content|truncatechars:20 }}</a>
+                    <a href="/news/{{ new.pk }}">{{ new.content|truncatechars:20|censor }}</a>
                 </td>
             </tr>
         </table>

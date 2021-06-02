@@ -1,10 +1,13 @@
-<!-- Название у нас будет proudcts -->
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
 {% block title %}
-<h3>{{ post.title }}</h3>
+{{ post.title|censor }}
 {% endblock title %}
 
 <!-- В контенте на странице мы выводим сам товар, ID которого было передано в адрес -->
 {% block content %}
-<p>{{ post.content }}</p>
+<h3>{{ post.title|censor }}</h3>
+    <hr>
+<p>{{ post.content|censor }}</p>
 <p>Writed by {{ post.author.authorUser.username }}. Published {{ post.date|date:'d.m.Y h:m' }}</p>
 {% endblock content %}
