@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'news',
-    'news.templatetags'
+    'news.templatetags',
+    'django_filters'
 ]
 
 MIDDLEWARE = [

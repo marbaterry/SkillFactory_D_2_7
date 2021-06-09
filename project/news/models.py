@@ -25,9 +25,15 @@ class Author(models.Model):
 
         return self.authorRating
 
+    def __str__(self):
+        return self.authorUser.username
+
 
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
+    def __str__(self):
+        return self.name
+
 
 
 class Post(models.Model):
@@ -50,6 +56,9 @@ class Post(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
+
+    def get_absolute_url(self):  # добавим абсолютный путь, чтобы после создания нас перебрасывало на страницу с товаром
+        return f'/news/{self.id}'
 
 
 class PostCategory(models.Model):

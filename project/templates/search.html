@@ -1,0 +1,40 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %} <!-- не забываем заранее загружать наши фильтры! -->
+
+{% block title %}
+Breaking News
+{% endblock title %}
+
+{% block content %}
+
+<h3>Search news</h3>
+    <hr>
+
+<form method="GET">
+    {{ filter.form }}
+    <input type="submit" value="Search" class="btn btn-danger">
+</form>
+<br>
+
+{% if filter.qs %}
+
+<table class='table'>
+    <tr>
+        <td><span class='font-weight-bold'>Title</span></td>
+        <td align=center><span class='font-weight-bold text-nowrap'>Date published</td>
+        <td><span class='font-weight-bold'>Content</td>
+    </tr>
+    {% for new in filter.qs %}
+    <tr>
+        <td>{{ new.title|censor }}</td>
+        <td class='text-center'>{{ new.date }}</td>
+        <td><a href="/news/{{ new.pk }}">{{ new.content|truncatechars:20|censor }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<h4>oops! not found</h4>
+{% endif %}
+
+{% endblock content %}
