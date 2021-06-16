@@ -15,9 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from news.views import upgrade_me
+from django.views.generic import RedirectView
+
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/news')),
     path('admin/', admin.site.urls),
     path('news/', include('news.urls')),
     path('news/search', include('news.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('upgrade/', upgrade_me, name='upgrade'),
 ]

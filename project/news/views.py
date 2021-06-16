@@ -1,5 +1,11 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.generic import TemplateView
 from .models import Post, Category
 from django.core.paginator import Paginator
 from .filters import PostFilter
@@ -16,6 +22,7 @@ class PostList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['is_not_premium'] = not self.request.user.groups.filter(name='authors').exists()
         context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
 
         context['categories'] = Category.objects.all()
@@ -55,12 +62,14 @@ class SearchNews(ListView):
         return context
 
 
-class PostCreateView(CreateView):
+class PostCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_post')
     template_name = 'post_create.html'
     form_class = PostForm
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_post')
     template_name = 'post_create.html'
     form_class = PostForm
 
@@ -73,3 +82,12 @@ class PostDeleteView(DeleteView):
     template_name = 'post_delete.html'
     queryset = Post.objects.all()
     success_url = '/news/'
+
+
+@login_required
+def upgrade_me(request):
+    user = request.user
+    author_group = Group.objects.get(name='authors')
+    if not request.user.groups.filter(name='authors').exists():
+        author_group.user_set.add(user)
+    return redirect('/')

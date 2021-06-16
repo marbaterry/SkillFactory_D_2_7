@@ -1,8 +1,23 @@
 from django.forms import ModelForm
+from django import forms
+from allauth.account.forms import SignupForm
+
 from .models import Post
+from django.contrib.auth.models import Group
+
 
 class PostForm(ModelForm):
-    # в класс мета, как обычно, надо написать модель, по которой будет строится форма и нужные нам поля. Мы уже делали что-то похожее с фильтрами.
+    content = forms.CharField(label='', widget=forms.Textarea(attrs={'class': 'form-control mb-2'}))
+
     class Meta:
         model = Post
-        fields = ['title', 'category', 'content', 'author']
+        fields = ['post_type', 'title', 'author', 'content']
+
+
+class BasicSignupForm(SignupForm):
+
+    def save(self, request):
+        user = super(BasicSignupForm, self).save(request)
+        basic_group = Group.objects.get(name='common')
+        basic_group.user_set.add(user)
+        return user
