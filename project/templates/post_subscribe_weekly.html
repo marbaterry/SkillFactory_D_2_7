@@ -1,0 +1,15 @@
+<DOCTYPE html>
+<html lang="en">
+{% load custom_filters %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for new_sub in list_of_posts %}
+    <p>Название: {{ new_sub.title}}.</p>
+        {{ new_sub.content|truncatechars:50 }}<a href="http://127.0.0.1:8000/news/{{ new_sub.pk }}">Open</a></p>
+    {% endfor %}
+</body>
+</html>

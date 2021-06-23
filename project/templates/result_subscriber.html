@@ -1,0 +1,56 @@
+{% extends 'flatpages/default.html' %}
+{% block title %}
+SUBS
+{% endblock title %}
+
+{% block content %}
+    <h3>U SUBS</h3>
+<hr>
+{% load account %}
+{% if user.is_authenticated %}
+You login as {% user_display user %}
+<button type="button">
+    <a href={% url 'account_logout' %} <u>LOGOUT</u></a>
+</button>
+{% if is_not_premium %}
+<button> <a href={% url 'upgrade' %}> GET STARTED!</a> </button>
+{% endif %}
+{% else %}
+<button type="button">
+    <a href={% url 'account_login' %}><u>LOGIN</u></a>
+</button>
+<button type="button">
+    <a href={% url 'account_signup' %}><u>SIGNUP</u></a>
+</button>
+{% endif %}
+<hr>
+<button type="button">
+    <a href="/news/search"><u>SEARCH</u></a>
+</button>
+<button type="button">
+    <a href="/news/add"><u>CREATE</u></a>
+</button>
+<hr>
+Без фильтров
+<hr>
+<table class='table'>
+    {% for list in subs %}
+    <tr>
+        <td class='text-center'>{{ list.classTrough }}</td>
+        <td class='text-center'>{{ list.userTrough }}</td>
+    {% endfor %}
+    </tr>
+</table>
+<hr>
+С фильтрами
+<hr>
+<table class='table'>
+    {% for list in category %}
+    <tr>
+        <td class='text-center'>{{ list.classTrough }}</td>
+        <td class='text-center'>{{ list.userTrough }}</td>
+    {% endfor %}
+    </tr>
+</table>
+{{ request.user.id }}
+ {% endblock content %}
