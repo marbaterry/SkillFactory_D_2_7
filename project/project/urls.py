@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from news.views import upgrade_me
+from news.views import *
 from django.views.generic import RedirectView
 
 
@@ -26,4 +26,5 @@ urlpatterns = [
     path('news/search', include('news.urls')),
     path('accounts/', include('allauth.urls')),
     path('upgrade/', upgrade_me, name='upgrade'),
+    path('subscribe/', user_filter, name='sub'),
 ]

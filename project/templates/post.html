@@ -13,9 +13,13 @@ Breaking News
 You login as {% user_display user %}
 <button type="button">
     <a href={% url 'account_logout' %} <u>LOGOUT</u></a>
+
 </button>
+<button> <a href="/news/result"> My subscribe W/O user filter</a> </button>
+<button> <a href="/subscribe"> My subscribe </a> </button>
 {% if is_not_premium %}
 <button> <a href={% url 'upgrade' %}> GET STARTED!</a> </button>
+
 {% endif %}
 {% else %}
 <button type="button">
@@ -41,6 +45,7 @@ You login as {% user_display user %}
         <td><span class='font-weight-bold'>Content</td>
         <td><span class='font-weight-bold'></td>
         <td><span class='font-weight-bold'></td>
+        <td><span class='font-weight-bold'></td>
     </tr>
     {% for new in post %}
     <tr>
@@ -49,6 +54,7 @@ You login as {% user_display user %}
         <td><a href="/news/{{ new.pk }}">{{ new.content|truncatechars:20|censor }}</a></td>
         <td><a href="/news/{{ new.pk }}/edit"><u>Edit</u></a></td>
         <td><a href="/news/{{ new.pk }}/delete"><u>Delete</u></a></td>
+        <td>{{ new.category_id }}</td>
     </tr>
     {% endfor %}
 </table>
