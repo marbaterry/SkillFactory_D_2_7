@@ -20,7 +20,7 @@ class PostForm(ModelForm):
 
     class Meta:
         model = Post
-        fields = ['post_type', 'title', 'author', 'content', 'category']
+        fields = ['post_type', 'title', 'author', 'content', 'category_id']
 
 
 class BasicSignupForm(SignupForm):

@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 @receiver(post_save, sender=Post)
 def notify_managers_appointment(sender, instance, created, **kwargs):
     if created:
+        emails = []
         new_sub = instance
         title = instance.title
         body = instance.content[:50]
@@ -21,7 +22,7 @@ def notify_managers_appointment(sender, instance, created, **kwargs):
                 print(list)
                 subscribers = list.subscriber.all()
                 print(subscribers)
-                emails = []
+                # emails = []
                 for subs in subscribers:
                     email = subs.email
                     emails.append(email)
