@@ -19,9 +19,9 @@ def notify_managers_appointment(sender, instance, created, **kwargs):
         category = Category.objects.all()
         for list in category:
             if list == i:
-                print(list)
+                #print(list)
                 subscribers = list.subscriber.all()
-                print(subscribers)
+                #print(subscribers)
                 # emails = []
                 for subs in subscribers:
                     email = subs.email
@@ -39,4 +39,4 @@ def notify_managers_appointment(sender, instance, created, **kwargs):
             to=emails,  # это то же, что и recipients_list
         )
         msg.attach_alternative(html_content, "text/html")
-        msg.send()
+        # msg.send()

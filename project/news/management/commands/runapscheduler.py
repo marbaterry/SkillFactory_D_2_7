@@ -69,7 +69,7 @@ def my_job():
                 to=emails,  # это то же, что и recipients_list
             )
             msg.attach_alternative(html_content, "text/html")
-            msg.send()
+            # msg.send()
 
 
 

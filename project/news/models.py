@@ -90,3 +90,5 @@ class Comment(models.Model):
 class CategorySubscriber(models.Model):
     classTrough = models.ForeignKey(Category, on_delete=models.CASCADE)
     userTrough = models.ForeignKey(User, on_delete=models.CASCADE)
+
+

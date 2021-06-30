@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 from datetime import datetime
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+from .tasks import *
 
 
 class PostList(ListView):
@@ -67,6 +68,30 @@ class PostCreateView(PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_post')
     template_name = 'post_create.html'
     form_class = PostForm
+
+    def form_valid(self, form):
+        created_post = form.save()
+        emails = []
+        title = created_post.title
+        body = created_post.content[:50]
+        subject = f'Добавлена новая статья {title}'
+        i = created_post.category_id
+        category = Category.objects.all()
+        for list in category:
+            if list == i:
+                subscribers = list.subscriber.all()
+                for subs in subscribers:
+                    email = subs.email
+                    emails.append(email)
+                    print(emails)
+        html_content = render_to_string(
+            'post_subscribe.html',
+            {
+                'new_sub': created_post,
+            }
+        )
+        send_email.delay(subject, body, emails, html_content)
+        return redirect('/')
 
 
 class PostUpdateView(PermissionRequiredMixin, UpdateView):
