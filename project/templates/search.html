@@ -5,6 +5,8 @@
 Breaking News
 {% endblock title %}
 
+{% load cache %} <!-- Загружаем кэширование -->
+{% cache 30 content %} <!-- Кэшируем отдельный блок на 30 секунд -->
 {% block content %}
 
 <h3>Search news</h3>
@@ -38,3 +40,4 @@ Breaking News
 {% endif %}
 
 {% endblock content %}
+{% endcache %}

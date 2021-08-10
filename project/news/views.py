@@ -15,6 +15,10 @@ from datetime import datetime
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from .tasks import *
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 
 class PostList(ListView):
@@ -26,6 +30,7 @@ class PostList(ListView):
     form_class = PostForm
 
     def get_context_data(self, **kwargs):
+        logger.error("Hello! I'm error in your app. Enjoy:)")
         context = super().get_context_data(**kwargs)
         context['is_not_premium'] = not self.request.user.groups.filter(name='authors').exists()
         context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
